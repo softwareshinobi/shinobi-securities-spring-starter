@@ -1,144 +1,66 @@
-# Spring Security REST API Boilerplate
-___
-## Overview
+# Boilerplate Spring Security with Custom Integrations and Bootstrap Dashboard
 
-This is a boilerplate Spring Boot project designed to kickstart the development of RESTful APIs with built-in Spring Security for authentication and authorization.
+This project is a fork of an existing Spring Security boilerplate. It has been modified and extended to integrate custom functionalities and features a user-friendly interface built with an open-source Bootstrap dashboard template.
 
-## Features
+## Project Overview
 
-- **Spring Boot:** Utilize the power of the Spring Boot framework for building robust and scalable applications.
-- **Spring Security:** Implement secure authentication and authorization mechanisms to protect your REST API.
-- **RESTful API:** Design and develop a clean and efficient RESTful API to handle your application's business logic.
-- **Customizable:** Easily extend and customize the project to fit your specific requirements.
+This project aims to provide a ready-to-use foundation for building secure web applications using Spring Security. While leveraging the robust security features of the original boilerplate, this fork introduces the following key enhancements:
+
+* **Integration of Custom Functionality:** [Briefly describe the main custom features or integrations you've added. For example: "Added user profile management endpoints," "Implemented two-factor authentication," "Integrated with a third-party service," etc.]
+* **Open Source Bootstrap Dashboard:** The application's frontend has been enhanced with a responsive and visually appealing dashboard template based on Bootstrap. This provides a better user experience for administrative or user-facing sections of the application.
 
 ## Getting Started
 
-1. Clone the repository: `git clone https://github.com/hakimfauzi23/boilerplate-spring-security.git`
-2. Navigate to the project directory `cd boilerplate-spring-security`
-3. Configure `src/main/resources/application.properties`
-    ```properties
-   spring.datasource.url= jdbc:mysql://localhost:3306/testdb?useSSL=false
-   spring.datasource.username= root
-   spring.datasource.password=
-   spring.jpa.hibernate.ddl-auto= update
-   
-   # App Properties
-   spring.app.jwtSecret= ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ
-   spring.app.jwtExpirationMs= 60000
-   spring.app.jwtRefreshExpirationMs= 259200000
-   ```
-4. Create a new database that has a same name in `spring.datasource.url` properties
-5. Build the application JAR File : `mvn clean package`
-6. Run the application by running the JAR File : `java -jar target/boilerplate-spring-security-0.0.1-SNAPSHOT.jar`
-7. Application is running, now you can experiment on the Authentication & Authorization in this project!
+[Include standard "Getting Started" instructions, such as:]
 
-## Authentication Feature
-The Authentication feature involves generating a JSON Web Token (JWT) for inclusion in the header of each API request. The feature encompasses three distinct endpoints: `api/auth/signup`, `api/auth/signin`, and `api/auth/refresh-token`. Below is a breakdown of each API endpoint:
-___
-### Sign Up Endpoint
-This is for create new user credentials so the authentication login can be done with the user credential.
+1.  **Prerequisites:**
+    * Java Development Kit (JDK)
+    * Maven (or Gradle, if the original project used it)
+    * A database (if the project uses one, specify which one)
+2.  **Cloning the Repository:**
+    ```bash
+    git clone [Your Fork's Repository URL]
+    cd [Your Project Directory]
+    ```
+3.  **Configuration:**
+    * Review and configure the application properties (e.g., database connection details, server port, etc.) usually located in `src/main/resources/application.properties` or `application.yml`.
+    * [Mention any specific configuration steps related to your custom integrations.]
+4.  **Building the Project:**
+    ```bash
+    mvn clean install
+    ```
+    (or `gradle build` if the original project used Gradle)
+5.  **Running the Application:**
+    ```bash
+    mvn spring-boot:run
+    ```
+    (or `gradle bootRun`)
+6.  **Accessing the Application:**
+    Open your web browser and navigate to the configured server address (usually `http://localhost:8080`).
 
-**API Endpoint:** `http://localhost:8080/api/auth/signup`
+## Key Features
 
-**Request:**
-```json
-{
-    "username":"user1",
-    "email":"user1@mail.com",
-    "password":"12345678",
-    "role": ["user"]
-}
-```
+* **Spring Security:** Inherits the robust authentication and authorization mechanisms from the original boilerplate.
+* **Custom Integrations:** [List the key custom features you've added.]
+* **Bootstrap Dashboard:** Provides a responsive and modern user interface.
+* [List any other significant features.]
 
-**Response:**
-```json
-{
-   "message": "User registered successfully!"
-}
-```
-___
-### Sign In Endpoint
-This process involves generating an Access Token (JWT) by sending a request to the sign-in endpoint with the user credentials previously created through the sign-up endpoint.
+## Contributing
 
-**API Endpoint:** `http://localhost:8080/api/auth/signin`
+[Include standard contributing guidelines, such as:]
 
-**Request**
-```json
-{
-    "username" : "user1",
-    "password" : "12345678"
-}
-```
+Contributions are welcome! Please follow these steps:
 
-**Response**
-```json
-{
-    "refreshToken": "80b5f84f-c812-4efb-90a8-94893ec460a9",
-    "id": 2,
-    "username": "user1",
-    "email": "user1@mail.com",
-    "roles": [
-        "ROLE_USER"
-    ],
-    "tokenType": "Bearer",
-    "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOi........"
-}
-```
-### Refresh Token Endpoint
-The access token comes with an expiration time. In situations where the access token has expired, but the refresh token is still valid, the refresh token can be employed to generate a new access token.
+1.  Fork the repository.
+2.  Create a new branch for your feature or bug fix.
+3.  Make your changes and commit them.
+4.  Push your changes to your fork.
+5.  Submit a pull request.
 
-**API Endpoint:** `http://localhost:8080/api/auth/signin`
+## License
 
+[Specify the license under which your fork is released. This might be the same as the original project or a different one.]
 
-**Request**
-```json
-{
-    "refreshToken" : "6c276542-4fdf-4d7c-ba2d-dbd42cc3cfe9"
-}
-```
+## Acknowledgements
 
-**Response**
-```json
-{
-    "accessToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMSIs............",
-    "refreshToken": "80b5f84f-c812-4efb-90a8-94893ec460a9",
-    "tokenType": "Bearer"
-}
-```
-
-___
-## Authorization Feature
-After gaining an understanding of Authentication and learning how to generate the Access Token, the next step is to comprehend the Authorization feature. This feature is employed to filter the JWT Token based on whether it possesses a role that grants access to a specific endpoint. If the Authorization feature determines that the token lacks the requisite role, access will be denied.
-
-Here's how to make the endpoint have the authorization, please use `@PreAuthorize("hasRole('__ROLE NAME__')")` annotation like below: 
-```java
-@RestController
-@RequestMapping("/api/test")
-public class TestController {
-
-    @GetMapping("/all")
-    public String allAccess() {
-        return "Public Content.";
-    }
-
-    @GetMapping("/user")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public String userAccess() {
-        return "User Content.";
-    }
-
-    @GetMapping("/admin")
-    @PreAuthorize("hasRole('ADMIN')")
-    public String adminAccess() {
-        return "Admin Board.";
-    }
-}
-```
-
-This is how to use Access Token that generated in Authentication Feature, you can use the JWT token in the header `Authorization` with starts of `Bearer` then your Access Token.
-
-```shell
-curl -X GET http://localhost:8080/api/test/user \
-     -H "Authorization: Bearer __ACCESS TOKEN__" \
-     -H "Other-Header: Header-Value"
-```
+This project builds
