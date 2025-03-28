@@ -1,0 +1,9 @@
+
+CREATE USER 'shinobi'@'%' IDENTIFIED BY 'shinobi';
+
+GRANT SELECT ON MONACO_MOTORS.* TO 'shinobi'@'%' IDENTIFIED BY 'shinobi';
+
+GRANT SELECT ON LOCAL_REAL_ESTATE.* TO 'shinobi'@'%' IDENTIFIED BY 'shinobi';
+
+GRANT SELECT ON MEGA_MART_GROCERY.* TO 'shinobi'@'%' IDENTIFIED BY 'shinobi';
+

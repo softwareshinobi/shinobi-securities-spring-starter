@@ -1,0 +1,17 @@
+services:
+
+    embaNET-dashboarding-admincast:
+
+        container_name: embaNET-dashboarding-admincast
+
+        image: softwareshinobi/embaNET-dashboarding-admincast
+
+        build: 
+
+            context: .
+
+            dockerfile: Dockerfile
+
+        ports:
+
+            - 8080:80

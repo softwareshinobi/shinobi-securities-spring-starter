@@ -1,0 +1,219 @@
+services:
+
+##########################################
+##
+## napkin exchange / network instratucture
+##
+##########################################
+
+    shinobi-spring-security-starter-proxy:
+
+        container_name: shinobi-spring-security-starter-proxy
+
+        image: nginxproxy/nginx-proxy
+
+        restart: unless-stopped
+
+        ports:
+
+            - 80:80
+
+            - 443:443
+
+        volumes:
+
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+
+            - /var/docker/nginx/html:/usr/share/nginx/html
+
+            - /var/docker/nginx/certs:/etc/nginx/certs
+
+            - /var/docker/nginx/vhost:/etc/nginx/vhost.d
+
+        logging:
+
+            options:
+
+                max-size: "10m"
+
+                max-file: "3"
+
+    shinobi-spring-security-starter-letsencrypt:
+
+        container_name: shinobi-spring-security-starter-letsencrypt
+
+        image: jrcs/letsencrypt-nginx-proxy-companion
+
+        restart: unless-stopped
+
+        volumes_from:
+
+            - shinobi-spring-security-starter-proxy
+
+        volumes:
+
+            - /var/run/docker.sock:/var/run/docker.sock
+
+            - /var/docker/nginx/acme:/etc/acme.sh
+
+        environment:
+
+            DEFAULT_EMAIL: the.software.shinobi@gmail.com
+
+##########################################
+##
+## napkin exchange / storage infrastructure
+##
+##########################################
+
+    shinobi-spring-security-starter-database:
+
+        container_name: shinobi-spring-security-starter-database
+
+        image: mariadb
+
+##        volumes:
+##
+##            - /tmp/napkinexchange/database:/var/lib/mysql
+##
+        ports:
+
+            - 3306:3306
+
+        environment:
+
+            MYSQL_ROOT_PASSWORD: aggiepride
+
+            MYSQL_DATABASE: garudaworks
+
+            MYSQL_USER: garudaworks
+
+            MYSQL_PASSWORD: garudaworks
+
+    shinobi-spring-security-starter-phpmyadmin:
+
+        container_name: shinobi-spring-security-starter-phpmyadmin
+
+        image: beeyev/phpmyadmin-lightweight
+
+        depends_on:
+
+           - shinobi-spring-security-starter-database
+
+        links:
+
+           - shinobi-spring-security-starter-database
+
+        ports:
+
+            - 3380:80
+
+        environment:
+
+            VIRTUAL_HOST: database.napkinexchange.online
+
+            LETSENCRYPT_HOST: database.napkinexchange.online
+
+            PMA_HOST: shinobi-spring-security-starter-database
+
+##########################################
+##
+## shinobi-spring-security-starter / bootstrap front end
+##
+##########################################
+
+    shinobi-spring-security-starter-web:
+
+        container_name: shinobi-spring-security-starter-web
+
+        image: softwareshinobi/shinobi-spring-security-starter-web:huracan
+
+        build: 
+
+            context: web
+
+            dockerfile: Dockerfile
+
+        restart: unless-stopped
+
+        ports:
+
+            - "8080:80"
+
+##########################################
+##
+## shinobi-spring-security-starter / spring rest back end
+##
+##########################################
+
+    shinobi-spring-security-starter-apis:
+
+        container_name: shinobi-spring-security-starter-apis
+        
+        image: softwareshinobi/shinobi-spring-security-starter-apis:huracan
+
+        links:
+
+           - shinobi-spring-security-starter-database
+
+        depends_on:
+
+           - shinobi-spring-security-starter-database
+
+        build: 
+
+            context: .
+
+            dockerfile: Dockerfile
+    
+        restart: unless-stopped
+
+        ports:
+
+            - "8888:8888"
+
+        expose:
+
+            - 8888
+
+        environment:
+
+            VIRTUAL_PORT: 8888
+
+            VIRTUAL_HOST: huracan.softwareshinobi.com
+
+            LETSENCRYPT_HOST: huracan.softwareshinobi.com
+
+            DB_HOST: shinobi-spring-security-starter-database
+
+            DB_PORT: 3306
+
+            DB_NAME: garudaworks
+
+            DB_USER: garudaworks
+
+            DB_PASS: garudaworks
+
+##########################################
+##
+## shinobi-spring-security-starter / documentation
+##
+##########################################
+
+    shinobi-spring-security-starter-docs:
+
+        container_name: shinobi-spring-security-starter-docs
+
+        image: softwareshinobi/shinobi-spring-security-starter-docs:huracan
+
+        build: 
+
+            context: docs
+
+            dockerfile: Dockerfile
+
+        restart: unless-stopped
+
+        ports:
+
+            - "8880:80"
