@@ -10,7 +10,8 @@ This project aims to provide a ready-to-use foundation for building secure web a
 
 ## Link to Original Project's README
 
-For a detailed understanding of the base Spring Security implementation, please refer to the [README]([Link to the readme1.md file of the original project]) file of the original project.
+For a detailed understanding of the base Spring Security implementation, please refer to the documentation of the original project.
 
-**Important:** Replace the inner `[Link to the readme1.md file of the original project]` with the actual URL or relative path to the `readme1.md` file. For example:
+[Original Project Documentation](readme1.md)
+
 
